@@ -4,4 +4,5 @@ Gemfile.lock
 gemfiles/*.lock
 pkg
 rdoc
-
+.bundle
+vendor/bundle
