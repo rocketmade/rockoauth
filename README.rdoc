@@ -69,7 +69,7 @@ need to provide four things:
 Declare your app's name somewhere (for example in Rails, in <tt>application.rb</tt>
 or an initializer):
 
-  require 'songkick/oauth2/provider'
+  require 'rockoauth/provider'
   RockOAuth::Provider.realm = 'My OAuth app'
 
 
@@ -103,8 +103,8 @@ done using <tt>RockOAuth::Model::Schema.migrate</tt>, which will run all
 the gem's migrations that have not yet been applied to your database.
 
   RockOAuth::Model::Schema.migrate
-  I, [2012-10-31T14:52:33.801428 #7002]  INFO -- : Migrating to SongkickOauth2SchemaOriginalSchema (20120828112156)
-  ==  SongkickOauth2SchemaOriginalSchema: migrating =============================
+  I, [2012-10-31T14:52:33.801428 #7002]  INFO -- : Migrating to RockoauthSchemaOriginalSchema (20120828112156)
+  ==  Rockoauth2SchemaOriginalSchema: migrating =============================
   -- create_table(:oauth2_clients)
      -> 0.0029s
   -- add_index(:oauth2_clients, [:client_id])

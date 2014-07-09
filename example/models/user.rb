@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
-  include Songkick::OAuth2::Model::ResourceOwner
-  include Songkick::OAuth2::Model::ClientOwner
+  include RockOAuth::Model::ResourceOwner
+  include RockOAuth::Model::ClientOwner
   has_many :notes
 end
-
