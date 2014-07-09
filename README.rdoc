@@ -1,7 +1,4 @@
-= Songkick::OAuth2::Provider
-
-{<img src="https://secure.travis-ci.org/songkick/oauth2-provider.png?branch=master" alt="Build Status" />}[http://travis-ci.org/songkick/oauth2-provider]
-{<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/songkick/oauth2-provider]
+= RockOAuth Oauth 2 Provider
 
 This gem provides a toolkit for adding OAuth2 provider capabilities to a Ruby
 web app. It handles most of the protocol for you: it is designed to provide
@@ -16,11 +13,12 @@ framework-specific request objects, though you can pass those in and their
 
 It stores the clients and authorizations using ActiveRecord.
 
+It is forked from songkick-oauth2-provider[https://github.com/songkick/oauth2-provider].
+With much appreciation for their excellent work.
 
 === Installation
 
-  gem install songkick-oauth2-provider
-
+  gem install rockoauth
 
 === A note on versioning
 
@@ -72,24 +70,24 @@ Declare your app's name somewhere (for example in Rails, in <tt>application.rb</
 or an initializer):
 
   require 'songkick/oauth2/provider'
-  Songkick::OAuth2::Provider.realm = 'My OAuth app'
+  RockOAuth::Provider.realm = 'My OAuth app'
 
 
 === HTTPS
 
 Your application should ensure that any endpoint that receives or returns OAuth
 data is only accessible over a secure transport such as the <tt>https:</tt>
-protocol. <tt>Songkick::OAuth2::Provider</tt> can enforce this to make it easier
+protocol. <tt>RockOAuth::Provider</tt> can enforce this to make it easier
 to keep your users' data secure.
 
-You can set <tt>Songkick::OAuth2::Provider.enforce_ssl = true</tt> in the same
+You can set <tt>RockOAuth::Provider.enforce_ssl = true</tt> in the same
 place that you declared your app name above. This will result in the following
 behavior:
 
-* The <tt>Songkick::OAuth2::Provider.parse</tt> method will produce error
+* The <tt>RockOAuth::Provider.parse</tt> method will produce error
   responses and will not process the incoming request unless the request was
   made using the <tt>https:</tt> protocol.
-* An access token constructed using <tt>Songkick::OAuth2::Provider.access_token</tt>
+* An access token constructed using <tt>RockOAuth::Provider.access_token</tt>
   will return <tt>false</tt> for <tt>#valid?</tt> unless the request was made
   using the <tt>https:</tt> protocol.
 * Any access token received over an insecure connection is immediately destroyed
@@ -100,11 +98,11 @@ behavior:
 
 === Schema
 
-Add the <tt>Songkick::OAuth2::Provider</tt> tables to your app's schema. This is
-done using <tt>Songkick::OAuth2::Model::Schema.migrate</tt>, which will run all
+Add the <tt>RockOAuth::Provider</tt> tables to your app's schema. This is
+done using <tt>RockOAuth::Model::Schema.migrate</tt>, which will run all
 the gem's migrations that have not yet been applied to your database.
 
-  Songkick::OAuth2::Model::Schema.migrate
+  RockOAuth::Model::Schema.migrate
   I, [2012-10-31T14:52:33.801428 #7002]  INFO -- : Migrating to SongkickOauth2SchemaOriginalSchema (20120828112156)
   ==  SongkickOauth2SchemaOriginalSchema: migrating =============================
   -- create_table(:oauth2_clients)
@@ -113,32 +111,32 @@ the gem's migrations that have not yet been applied to your database.
      -> 0.0009s
   ...
 
-To rollback migrations, use <tt>Songkick::OAuth2::Model::Schema.rollback</tt>.
+To rollback migrations, use <tt>RockOAuth::Model::Schema.rollback</tt>.
 
 
 === Model Mixins
 
 There are two mixins you need to put in your code,
-<tt>Songkick::OAuth2::Model::ClientOwner</tt> for whichever model will own the
-"apps", and <tt>Songkick::OAuth2::Model::ResourceOwner</tt> for whichever model
+<tt>RockOAuth::Model::ClientOwner</tt> for whichever model will own the
+"apps", and <tt>RockOAuth::Model::ResourceOwner</tt> for whichever model
 is the innocent, unassuming entity who will selectively share their data. It's
 possible that this is the same model, such as User:
 
   class User < ActiveRecord::Base
-    include Songkick::OAuth2::Model::ResourceOwner
-    include Songkick::OAuth2::Model::ClientOwner
+    include RockOAuth::Model::ResourceOwner
+    include RockOAuth::Model::ClientOwner
     has_many :interesting_pieces_of_data
   end
 
 Or they might go into two different models:
 
   class User < ActiveRecord::Base
-    include Songkick::OAuth2::Model::ResourceOwner
+    include RockOAuth::Model::ResourceOwner
     has_many :interesting_pieces_of_data
   end
 
   class Company < ActiveRecord::Base
-    include Songkick::OAuth2::Model::ClientOwner
+    include RockOAuth::Model::ClientOwner
     belongs_to :user
   end
 
@@ -149,17 +147,17 @@ take a look at <b>lib/oauth2/model/client_owner.rb</b> and
 
 === Registering client applications
 
-Clients are modeled by the <tt>Songkick::OAuth2::Model::Client</tt> class, which
+Clients are modeled by the <tt>RockOAuth::Model::Client</tt> class, which
 is an ActiveRecord model. You just need to implement a UI for creating them, for
 example in a Sinatra app:
 
   get '/oauth/apps/new' do
-    @client = Songkick::OAuth2::Model::Client.new
+    @client = RockOAuth::Model::Client.new
     erb :new_client
   end
 
   post '/oauth/apps' do
-    @client = Songkick::OAuth2::Model::Client.new(params)
+    @client = RockOAuth::Model::Client.new(params)
     @client.save ? erb(:show_client) : erb(:new_client)
   end
 
@@ -179,10 +177,10 @@ This is a path that your application exposes in order for clients to communicate
 with your application. It is also the page that the client will send users to
 so they can authenticate and grant access. Many requests to this endpoint will
 be protocol-level requests that do not involve the user, and
-<tt>Songkick::OAuth2::Provider</tt> gives you a generic way to handle all that.
+<tt>RockOAuth::Provider</tt> gives you a generic way to handle all that.
 
 You should use this to get the right response, status code and headers to send
-to the client. In the event that <tt>Songkick::OAuth2::Provider</tt> does not
+to the client. In the event that <tt>RockOAuth::Provider</tt> does not
 provide a response, you should render a page that lets the user begin to
 authenticate and grant access. This can happen in two cases:
 
@@ -202,7 +200,7 @@ the client:
   [:get, :post].each do |method|
     __send__ method, '/oauth/authorize' do
       @owner  = User.find_by_id(session[:user_id])
-      @oauth2 = Songkick::OAuth2::Provider.parse(@owner, env)
+      @oauth2 = RockOAuth::Provider.parse(@owner, env)
 
       if @oauth2.redirect?
         redirect @oauth2.redirect_uri, @oauth2.response_status
@@ -257,7 +255,7 @@ user checks a box before posting a form to indicate their intent:
 
   post '/oauth/allow' do
     @user = User.find_by_id(session[:user_id])
-    @auth = Songkick::OAuth2::Provider::Authorization.new(@user, params)
+    @auth = RockOAuth::Provider::Authorization.new(@user, params)
 
     if params['allow'] == '1'
       @auth.grant_access!
@@ -268,7 +266,7 @@ user checks a box before posting a form to indicate their intent:
   end
 
 After granting or denying access, we just redirect back to the client using a
-URI that <tt>Songkick::OAuth2::Provider</tt> will provide for you.
+URI that <tt>RockOAuth::Provider</tt> will provide for you.
 
 
 === Using password credentials
@@ -279,7 +277,7 @@ directly from the user and then post them to the exchange endpoint. On the
 provider side you can handle this using the <tt>handle_passwords</tt> and
 <tt>grant_access!</tt> API methods, for example:
 
-  Songkick::OAuth2::Provider.handle_passwords do |client, username, password, scopes|
+  RockOAuth::Provider.handle_passwords do |client, username, password, scopes|
     user = User.find_by_username(username)
     if user.authenticate?(password)
       user.grant_access!(client, :scopes => scopes, :duration => 1.day)
@@ -308,14 +306,14 @@ would then pass this token to your OAuth endpoint and exchange it for an access
 token from your site. You will typically create an account in your database to
 represent this, then have that new account grant access to the client.
 
-To use assertions, you must tell <tt>Songkick::OAuth2::Provider</tt> how to
+To use assertions, you must tell <tt>RockOAuth::Provider</tt> how to
 handle assertions based on their type. An assertion type must be a valid URI.
 For the Facebook example we'd do the following. The block yields the
 <tt>Client</tt> object making the exchange request, the value of the assertion,
 which in this example will be a Facebook access token, and a <tt>Set</tt> of
 requested scopes.
 
-  Songkick::OAuth2::Provider.handle_assertions 'https://graph.facebook.com/me' do |client, assertion, scopes|
+  RockOAuth::Provider.handle_assertions 'https://graph.facebook.com/me' do |client, assertion, scopes|
     facebook = URI.parse('https://graph.facebook.com/me?access_token=' + assertion)
     response = Net::HTTP.get_response(facebook)
 
@@ -326,7 +324,7 @@ requested scopes.
   end
 
 This code should run when your app boots, not during a request handler - think
-of it as configuration for <tt>Songkick::OAuth2::Provider</tt>. The framework
+of it as configuration for <tt>RockOAuth::Provider</tt>. The framework
 will invoke it when a client attempts to use assertions with your OAuth endpoint.
 
 The final call in your handler should be to <tt>grant_access!</tt>; this returns
@@ -343,7 +341,7 @@ simple, for example a call to get a user's notes:
 
   get '/user/:username/notes' do
     user  = User.find_by_username(params[:username])
-    token = Songkick::OAuth2::Provider.access_token(user, ['read_notes'], env)
+    token = RockOAuth::Provider.access_token(user, ['read_notes'], env)
 
     headers token.response_headers
     status  token.response_status
@@ -355,7 +353,7 @@ simple, for example a call to get a user's notes:
     end
   end
 
-<tt>Songkick::OAuth2::Provider.access_token()</tt> takes a
+<tt>RockOAuth::Provider.access_token()</tt> takes a
 <tt>ResourceOwner</tt>, a list of scopes required to access the resource, and a
 request environment object. If the token was not granted for the required scopes,
 has expired or is simply invalid, headers and a status code are set to indicate
@@ -367,7 +365,7 @@ about a user by supplying their access token. This can be done by passing
 <tt>:implicit</tt> as the resource owner:
 
   get '/me' do
-    token = Songkick::OAuth2::Provider.access_token(:implicit, [], env)
+    token = RockOAuth::Provider.access_token(:implicit, [], env)
     if token.valid?
       JSON.unparse('username' => token.owner.username)
     else
@@ -381,6 +379,27 @@ permissions.
 
 
 == License
+
+Copyright (c) 2014 Rocketmade.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
 
 Copyright (c) 2010-2012 Songkick.com
 
@@ -401,4 +420,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
