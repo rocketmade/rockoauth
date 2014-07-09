@@ -12,13 +12,13 @@ describe RockOAuth::Model::Helpers do
 
     context 'when conditions are not passed' do
       it 'returns count of total rows' do
-        subject.count(owner.oauth2_clients).should == 3
+        expect(subject.count(owner.oauth2_clients)).to eq(3)
       end
     end
 
     context 'when conditions are passed' do
       it 'returns count of rows satisfying supplied conditions' do
-        subject.count(RockOAuth::Model::Client, :client_id => RockOAuth::Model::Client.first.client_id).should == 1
+        expect(subject.count(RockOAuth::Model::Client, :client_id => RockOAuth::Model::Client.first.client_id)).to eq(1)
       end
     end
   end
