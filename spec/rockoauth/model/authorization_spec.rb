@@ -172,19 +172,19 @@ describe RockOAuth::Model::Authorization do
 
   describe "#grants_access?" do
     it "returns true given the right user" do
-      authorization.grants_access?(tester).should be_true
+      authorization.grants_access?(tester).should == true
     end
 
     it "returns false given the wrong user" do
-      authorization.grants_access?(user).should be_false
+      authorization.grants_access?(user).should == false
     end
 
     describe "when the authorization is expired" do
       before { authorization.expires_at = 2.days.ago }
 
       it "returns false in all cases" do
-        authorization.grants_access?(tester).should be_false
-        authorization.grants_access?(user).should be_false
+        authorization.grants_access?(tester).should == false
+        authorization.grants_access?(user).should == false
       end
     end
   end
@@ -206,31 +206,31 @@ describe RockOAuth::Model::Authorization do
 
     describe "#grants_access?" do
       it "returns true given the right user and all authorization scopes" do
-        authorization.grants_access?(tester, 'foo', 'bar').should be_true
+        authorization.grants_access?(tester, 'foo', 'bar').should == true
       end
 
       it "returns true given the right user and some authorization scopes" do
-        authorization.grants_access?(tester, 'bar').should be_true
+        authorization.grants_access?(tester, 'bar').should == true
       end
 
       it "returns false given the right user and some unauthorization scopes" do
-        authorization.grants_access?(tester, 'foo', 'bar', 'qux').should be_false
+        authorization.grants_access?(tester, 'foo', 'bar', 'qux').should == false
       end
 
       it "returns false given an unauthorized scope" do
-        authorization.grants_access?(tester, 'qux').should be_false
+        authorization.grants_access?(tester, 'qux').should == false
       end
 
       it "returns true given the right user" do
-        authorization.grants_access?(tester).should be_true
+        authorization.grants_access?(tester).should == true
       end
 
       it "returns false given the wrong user" do
-        authorization.grants_access?(user).should be_false
+        authorization.grants_access?(user).should == false
       end
 
       it "returns false given the wrong user and an authorized scope" do
-        authorization.grants_access?(user, 'foo').should be_false
+        authorization.grants_access?(user, 'foo').should == false
       end
     end
   end
