@@ -3,7 +3,7 @@ spec = Gem::Specification.new do |s|
   s.version           = '0.1.0'
   s.summary           = 'Simple OAuth 2.0 provider toolkit'
   s.authors           = ['Daniel Evans', 'James Coglan']
-  s.email             = 'daniel@rocketmade.com'
+  s.email             = 'evans.daniel.n@gmail.com'
   s.homepage          = 'http://github.com/rocketmade/rockoauth'
 
   s.extra_rdoc_files  = %w[README.rdoc]
