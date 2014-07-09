@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'songkick/oauth2/provider'
+require 'rockoauth/provider'
 require 'active_record'
 require File.expand_path('../models/connection', __FILE__)
 
@@ -19,5 +19,4 @@ ActiveRecord::Schema.define do |version|
   end
 end
 
-Songkick::OAuth2::Model::Schema.up
-
+RockOAuth::Model::Schema.up

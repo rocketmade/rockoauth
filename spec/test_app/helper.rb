@@ -3,8 +3,8 @@ module TestApp
   class User < ActiveRecord::Base
     self.table_name = :users
 
-    include Songkick::OAuth2::Model::ResourceOwner
-    include Songkick::OAuth2::Model::ClientOwner
+    include RockOAuth::Model::ResourceOwner
+    include RockOAuth::Model::ClientOwner
 
     def self.[](name)
       if respond_to?(:find_or_create_by)
@@ -34,4 +34,3 @@ module TestApp
   end
 
 end
-
