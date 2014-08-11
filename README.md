@@ -26,6 +26,18 @@ With much appreciation for their excellent work.
 gem install rockoauth
 ```
 
+## Supported versions
+
+This gem is tested on:
+
+- Ruby
+  - 1.9.3
+  - 2.0.0
+  - 2.1.0
+- Active Record
+  - 4.0
+  - 4.1
+
 ### A note on versioning
 
 This library is based on [draft-10](http://tools.ietf.org/html/draft-ietf-oauth-v2-10),
