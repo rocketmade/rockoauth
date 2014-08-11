@@ -1,3 +1,7 @@
+[![Gem Version](https://badge.fury.io/rb/rockoauth.png)](https://rubygems.org/gems/rockoauth)
+[![Build Status](https://secure.travis-ci.org/rocketmade/rockoauth.png?branch=master)](http://travis-ci.org/rocketmade/rockoauth)
+[![Code Climate](https://codeclimate.com/github/rocketmade/rockoauth.png)](https://codeclimate.com/github/rocketmade/rockoauth)
+
 # RockOAuth Oauth 2 Provider
 
 This gem provides a toolkit for adding OAuth2 provider capabilities to a Ruby
