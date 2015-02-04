@@ -6,10 +6,10 @@ spec = Gem::Specification.new do |s|
   s.email             = 'evans.daniel.n@gmail.com'
   s.homepage          = 'http://github.com/rocketmade/rockoauth'
 
-  s.extra_rdoc_files  = %w[README.rdoc]
-  s.rdoc_options      = %w[--main README.rdoc]
+  s.extra_rdoc_files  = %w[README.md]
+  s.rdoc_options      = %w[--main README.md]
 
-  s.files             = %w[History.txt README.rdoc] + Dir.glob('{example,lib,spec}/**/*.{css,erb,rb,rdoc,ru}')
+  s.files             = %w[History.txt README.md] + Dir.glob('{example,lib,spec}/**/*.{css,erb,rb,rdoc,ru,md}')
   s.require_paths     = ['lib']
 
   s.add_dependency 'activerecord', ">= 4.0"
