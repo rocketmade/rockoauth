@@ -1,3 +1,8 @@
+=== 0.1.1 / 2015-02-04
+
+* Elimiated bug preventing request objects from Rails which have parsed JSON data from being used.
+* Updated documentation and Travis CI configurations
+
 === 0.1.0 / 2014-07-08
 
 * Forked from songkick-oauth2-provider

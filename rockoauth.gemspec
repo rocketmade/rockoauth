@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name              = 'rockoauth'
-  s.version           = '0.1.0'
+  s.version           = '0.1.1'
   s.summary           = 'Simple OAuth 2.0 provider toolkit'
   s.authors           = ['Daniel Evans', 'James Coglan']
   s.email             = 'evans.daniel.n@gmail.com'
