@@ -3,8 +3,8 @@ module RockOAuth
 
     # Public methods in the namespace take either Rack env objects, or Request
     # objects from Rails/Sinatra and an optional params hash which it then
-    # coerces to Rack requests. This is for backward compatibility; originally
-    # it only took request objects.
+    # coerces to Rack requests if they are not already. This is for backward
+    # compatibility; originally it only took request objects.
 
     class << self
       def parse(resource_owner, env)
@@ -48,6 +48,8 @@ module RockOAuth
       private
 
       def request_from(env_or_request)
+        return env_or_request if env_or_request.is_a?(Rack::Request)
+
         env = env_or_request.respond_to?(:env) ? env_or_request.env : env_or_request
         env = Rack::MockRequest.env_for(env['REQUEST_URI'] || '', :input => env['RAW_POST_DATA']).merge(env)
         Rack::Request.new(env)
